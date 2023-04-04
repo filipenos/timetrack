@@ -71,15 +71,6 @@ func (e *Exec) Start(args args.StartArgs) error {
 		return err
 	}
 
-	cur, err := e.t.CurrentTimeEntry()
-	if err != nil {
-		return err
-	}
-	if cur != nil && cur.ID > 0 {
-		fmt.Printf("already running time track: %d", cur.ID)
-		return nil
-	}
-
 	var workspaceID = 0
 	if cfg.WorkspaceID != "" {
 		workspaceID, _ = strconv.Atoi(cfg.WorkspaceID)
@@ -139,6 +130,21 @@ func (e *Exec) Start(args args.StartArgs) error {
 		}
 	}
 
+	cur, err := e.t.CurrentTimeEntry()
+	if err != nil {
+		return err
+	}
+	if cur != nil && cur.ID > 0 {
+		if cur.ProjectID == entry.ProjectID && idInArray(args.Tag, cur.Tags) && cur.Description == entry.Description {
+			fmt.Printf("already running time track: %d", cur.ID)
+			return nil
+		}
+		fmt.Println("stop current, and start new")
+		if err := e.t.StopTimeEntry(cur.WorkspaceID, cur.ID); err != nil {
+			return err
+		}
+	}
+
 	resp, err := e.t.NewTimeEntry(entry)
 	if err != nil {
 		return err
@@ -169,4 +175,13 @@ func (e *Exec) Stop() error {
 
 	fmt.Printf("stoped track: %d", cur.ID)
 	return nil
+}
+
+func idInArray(id string, ids []string) bool {
+	for _, i := range ids {
+		if i == id {
+			return true
+		}
+	}
+	return false
 }
