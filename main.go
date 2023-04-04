@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/filipenos/tracktime/internal/args"
-	"github.com/filipenos/tracktime/internal/config"
-	"github.com/filipenos/tracktime/internal/toggl"
+	"github.com/filipenos/timetrack/internal/args"
+	"github.com/filipenos/timetrack/internal/config"
+	"github.com/filipenos/timetrack/internal/toggl"
 )
 
 var cfg *config.Config

@@ -1,4 +1,4 @@
-module github.com/filipenos/tracktime
+module github.com/filipenos/timetrack
 
 go 1.20
 
