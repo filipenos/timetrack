@@ -23,6 +23,7 @@ type Command interface {
 	Auth() error
 	Start(args StartArgs) error
 	Stop() error
+	Continue() error
 }
 
 type parsed struct {
@@ -35,6 +36,9 @@ type parsed struct {
 		Cmd  *argparse.Command
 	}
 	stop struct {
+		Cmd *argparse.Command
+	}
+	cont struct {
 		Cmd *argparse.Command
 	}
 }
@@ -52,6 +56,8 @@ func Parse(args []string) (Args, error) {
 	tag := p.start.Cmd.String("t", "tag", nil)
 
 	p.stop.Cmd = p.parser.NewCommand("stop", "Stop current timetrack")
+
+	p.cont.Cmd = p.parser.NewCommand("continue", "Continue last timetrack")
 
 	err := p.parser.Parse(args)
 	if err != nil {
@@ -72,6 +78,8 @@ func (p *parsed) Exec(cmd Command) error {
 		return cmd.Start(p.start.Args)
 	} else if p.stop.Cmd.Happened() {
 		return cmd.Stop()
+	} else if p.cont.Cmd.Happened() {
+		return cmd.Continue()
 	} else {
 		return fmt.Errorf("bad arguments, please check usage")
 	}
