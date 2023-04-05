@@ -59,7 +59,7 @@ type TimeEntry struct {
 	TaskID          interface{} `json:"task_id"`
 	Billable        bool        `json:"billable"`
 	Start           time.Time   `json:"start"`
-	Stop            interface{} `json:"stop"`
+	Stop            time.Time   `json:"stop"`
 	Duration        int         `json:"duration"`
 	Description     string      `json:"description"`
 	Tags            []string    `json:"tags"`

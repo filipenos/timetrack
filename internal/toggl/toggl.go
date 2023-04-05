@@ -109,6 +109,15 @@ func (t *Toggl) CurrentTimeEntry() (*TimeEntry, error) {
 	return &cur, nil
 }
 
+func (t *Toggl) List() ([]TimeEntry, error) {
+	var entrys []TimeEntry
+	if err := t.Send(http.MethodGet, "/me/time_entries", nil, &entrys); err != nil {
+		return nil, err
+	}
+
+	return entrys, nil
+}
+
 func (t *Toggl) NewTimeEntry(entry *NewTimeEntry) (*TimeEntry, error) {
 	var resp TimeEntry
 	if err := t.Send(http.MethodPost, fmt.Sprintf("/workspaces/%d/time_entries", entry.WorkspaceID), entry, &resp); err != nil {
